@@ -1,7 +1,8 @@
 from . import db
+from flask_login import UserMixin
 
 
-class UserProfile(db.Model):
+class UserProfile(db.Model, UserMixin):
     # You can use this to change the table name. The default convention is to use
     # the class name. In this case a class name of UserProfile would create a
     # user_profile (singular) table, but if we specify __tablename__ we can change it
@@ -23,10 +24,7 @@ class UserProfile(db.Model):
         return False
 
     def get_id(self):
-        try:
-            return unicode(self.id)  # python 2 support
-        except NameError:
-            return str(self.id)  # python 3 support
+        return str(self.id)  # python 3 support
 
     def __repr__(self):
         return '<User %r>' % (self.username)
