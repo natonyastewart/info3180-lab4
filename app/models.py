@@ -11,19 +11,19 @@ class UserProfile(db.Model, UserMixin):
     __tablename__ = 'user_profiles'
 
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(80))
-    last_name = db.Column(db.String(80))
-    username = db.Column(db.String(80), unique=True)
+    first_name = db.Column(db.String(80), nullable=False)
+    last_name = db.Column(db.String(80), nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False) #password
 
     def __init__(self, first_name, last_name, username, password):
-        self.fist_name = first_name
+        self.first_name = first_name
         self.last_name = last_name
         self.username = username 
         self.new_password(password)
 
     def new_password(self, password):
-        self.password = generate_password_hash(password)
+        self.password = generate_password_hash(password, method="pbkdf2:sha256")
 
     def password_check(self, password):
         return check_password_hash(self.password, password)
