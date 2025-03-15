@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<h1 class="page-header">Uploaded Files</h1>
+
+<div class="image-grid">
+    {% for image in images %}
+    <div class="image-item">
+        <img src="{{ url_for('get_image', filename=image) }}" alt="{{ image }}">
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+.image-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+</style>
+
+{% endblock %}

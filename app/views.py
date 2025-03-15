@@ -1,6 +1,6 @@
 import os
 from app import app, db, login_manager
-from flask import render_template, request, redirect, url_for, flash, session, abort
+from flask import render_template, request, redirect, url_for, flash, session, abort, send_from_directory
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.utils import secure_filename
 from app.models import UserProfile
@@ -8,6 +8,7 @@ from app.forms import LoginForm
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from .forms import UploadForm
+from flask import send_from_directory
 
 
 ###
@@ -88,6 +89,33 @@ def flash_errors(form):
                 getattr(form, field).label.text,
                 error
 ), 'danger')
+            
+
+            
+            
+def get_upload_images():
+    upload_folder = os.path.join(os.getcwd(), 'uploads')
+    images = []
+    if os.path.exists(upload_folder):
+        for file in os.listdir(upload_folder):
+            if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                images.append(file)
+    return images
+
+@app.route('/uploads/<filename>')
+def get_image(filename):
+    return send_from_directory(os.path.join(os.getcwd(), 'uploads'), filename)
+
+@app.route('/files')
+@login_required
+def files():
+    images = get_upload_images()
+    return render_template('files.html', images=images)
+
+
+
+
+
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):
